@@ -1,4 +1,4 @@
-module dan-getting-started
+module go-getting-started
 
 go 1.20
 

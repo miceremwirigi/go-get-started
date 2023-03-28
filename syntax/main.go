@@ -1,7 +1,7 @@
 package main
 
 import (
-	"dan-getting-started/syntax/math"
+	"go-getting-started/syntax/math"
 	"fmt"
 )
 
