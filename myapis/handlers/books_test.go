@@ -84,7 +84,7 @@ func TestPostBookHandler(t *testing.T) {
 		"price":     200,
 		"pages":     433
 	}`)
-	
+
 	Books = []models.Book{}
 
 	defer TearDown()
@@ -153,4 +153,34 @@ func TestPutBookHandler(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, len(Books), len(result))
+}
+
+func TestDeleteBookHandler(t *testing.T) {
+	api := "/books/01"
+	Books = []models.Book{
+		{ID: "01", Title: "Book1", Publisher: "Publisher1", Price: 200, Pages: 120},
+		{ID: "02", Title: "Book2", Publisher: "Publisher2", Price: 300, Pages: 140},
+		{ID: "03", Title: "Book3", Publisher: "Publisher3", Price: 400, Pages: 160},
+		{ID: "04", Title: "Book4", Publisher: "Publisher4", Price: 500, Pages: 180},
+	}
+
+	defer TearDown()
+
+	req, err := http.NewRequest("DELETE", api, nil)
+	assert.Nil(t, err)
+
+	req.Header.Set("content-type", "application/json")
+
+	handler := http.HandlerFunc(BookHandler)
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusOK, rr.Code)
+
+	var result = []models.Book{}
+	err = json.Unmarshal(rr.Body.Bytes(), &result)
+	assert.Nil(t, err)
+
+	assert.Equal(t, len(Books), len(result))
+
 }
