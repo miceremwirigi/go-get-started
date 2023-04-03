@@ -4,29 +4,25 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/gofiber/fiber/v2"
 	"go-getting-started/shop/pkgs/apis"
-	"go-getting-started/shop/pkgs/models"
 	"go-getting-started/shop/pkgs/database/gorm"
+	"go-getting-started/shop/pkgs/models"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
 	db, _ := gorm.InitializeDB()
-	db.AutoMigrate(&models.Product{})
+	db.AutoMigrate(&models.Product{}, &models.Cart{}, &models.CartItem{}, &models.Order{}, &models.CartItem{})
 	app := fiber.New()
 	port := ":3000"
 	args := os.Args[1:]
-	fmt.Println(args)
 	if len(args) > 0 {
-		port = fmt.Sprintf(":%s",args[0])
+		port = fmt.Sprintf(":%s", args[0])
 	}
 
-	h := apis.Handler{DB: db}
-	app.Get("/products", h.GetProducts)
-	app.Post("/products", h.AddProduct)
-	app.Put("/products/:id", h.UpdateProduct)
-	app.Get("/products/:id", h.GetProduct)
-	app.Delete("/products/:id", h.DeleteProduct)
+	v1 := app.Group("/v1")
+	apis.RegisterApiRoutes(v1, db)
 
 	err := app.Listen(port)
 	if err != nil {
