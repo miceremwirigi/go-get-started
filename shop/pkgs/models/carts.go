@@ -6,17 +6,18 @@ import (
 
 type Cart struct {
 	gorm.Model
-	CartNumber string `json:"cart_number"`
-	Quantity   int    `json:"quantity"`
+	Customer   string     `gorm:"customer"`
+	CartNumber string     `json:"cart_number"`
+	CartItems  []CartItem `json:"cart_items"`
+	// OrderItems []OrderItem `json:"order_items"`
 }
 
 type CartItem struct {
 	gorm.Model
-	ProductID int     `json:"product_id"`
-	Product   Product `json:"product"`
-
-	CartID int  `json:"cart_id"`
-	Cart   Cart `json:"cart"`
-
-	Quantity int `json:"quantity"`
+	ItemName  string  `json:"item_name"`
+	ProductID int     `json:"product_id" gorm:"foreignKey:ID"`
+	Product   Product `gorm:"foreignKey:ProductID;references:id" json:"product"`
+	CartID    int     `gorm:"foreignKey:ID" json:"cart_id"`
+	Cart      Cart    `gorm:"foreignKey:CartID;references:id" json:"cart"`
+	Quantity  int     `json:"quantity"`
 }

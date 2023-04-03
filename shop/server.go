@@ -13,20 +13,26 @@ import (
 
 func main() {
 	db, _ := gorm.InitializeDB()
-	db.AutoMigrate(&models.Product{}, &models.Cart{}, &models.CartItem{}, &models.Order{}, &models.CartItem{})
+	// db.Migrator().DropTable(&models.Product{})
+	// db.Migrator().DropTable(&models.Cart{})
+	// db.Migrator().DropTable(&models.CartItem{})
+	db.AutoMigrate(
+		&models.Product{},
+		&models.Cart{},
+		&models.CartItem{},
+		// &models.Order{},
+		// &models.OrderItem{},
+	)
+
 	app := fiber.New()
 	port := ":3000"
 	args := os.Args[1:]
-	fmt.Println(args)
 	if len(args) > 0 {
 		port = fmt.Sprintf(":%s", args[0])
 	}
 
 	v1 := app.Group("/v1")
 	apis.RegisterApiRoutes(v1, db)
-
-	// v2 := app.Group("/v2")
-	// apis.RegisterApiRoutes(v2, db)
 
 	err := app.Listen(port)
 	if err != nil {
