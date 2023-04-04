@@ -5,18 +5,19 @@ import (
 )
 
 type Order struct {
-	gorm.Model
-	OrderNumber  string `json:"order_number"`
-	ItemsQuantity int `json:"items_quantity"`
+    gorm.Model
+    OrderNumber string       `json:"order_number" gorm:"primaryKey"`
+    Products    string       `json:"products"`
+    OrderItems  []*OrderItem `json:"order_items" gorm:"foreignKey:OrderNumber;references:OrderNumber"`
 }
 
 type OrderItem struct {
-	gorm.Model
-	CartItemID int	`json:"cart_item_id"`
-	CartItem CartItem `json:"cart_item"`
-
-	OrderID int `json:"order_id"`
-	Order Order `json:"order"`
-
-	Quantity int `json:"quantity"`
+    gorm.Model
+    CartNumber        int    `json:"cart_number"`
+    Cart              *Cart  `json:"cart" gorm:"foreignKey:CartNumber;references"`
+    OrderNumber       string `json:"order_number"`
+    Order             *Order `json:"order" gorm:"foreignKey:OrderNumber;references:OrderNumber"`
+    Quantity          int    `json:"quantity"`
 }
+
+
