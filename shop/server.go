@@ -13,7 +13,17 @@ import (
 
 func main() {
 	db, _ := gorm.InitializeDB()
-	db.AutoMigrate(&models.Product{}, &models.Cart{}, &models.CartItem{}, &models.Order{}, &models.CartItem{})
+	// db.Migrator().DropTable(&models.Product{})
+	// db.Migrator().DropTable(&models.Cart{})
+	// db.Migrator().DropTable(&models.CartItem{})
+	db.AutoMigrate(
+		&models.Product{},
+		&models.Cart{},
+		&models.CartItem{},
+		// &models.Order{},
+		// &models.OrderItem{},
+	)
+
 	app := fiber.New()
 	port := ":3000"
 	args := os.Args[1:]
