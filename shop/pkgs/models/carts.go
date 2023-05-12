@@ -7,7 +7,7 @@ import (
 type Cart struct {
 	gorm.Model
 	Customer   string     `gorm:"customer"`
-	CartNumber string     `json:"cart_number"`
+	CartNumber string     `json:"cart_number" gorm:"unique: true"`
 	CartItems  []CartItem `json:"cart_items"`
 	// OrderItems []OrderItem `json:"order_items"`
 }
